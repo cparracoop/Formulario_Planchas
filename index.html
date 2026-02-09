@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro de Plancha</title>
+
+  <!-- Tipografía similar a tu CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- TU CSS (colores/estilos) -->
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    /* Pequeños estilos extra SOLO para la tabla (sin tocar tu paleta) */
+    table{
+      width:100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+    thead th{
+      text-align:left;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,138,134,.06);
+    }
+    tbody td{
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tbody tr:last-child td{ border-bottom: none; }
+    .td-actions{
+      width: 110px;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .cell-error{
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--danger);
+      font-weight: 700;
+      min-height: 14px;
+    }
+    .row-input{
+      width: 100%;
+    }
+    .toolbar{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 12px;
+      margin: 10px 0 12px;
+      flex-wrap: wrap;
+    }
+    .toolbar .muted{
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- HERO -->
+<header class="hero">
+  <div class="hero__inner">
+    <div class="hero__brand">
+      <img class="hero__logo" src="./logo-coopetrol.png" alt="Coopetrol">
+    </div>
+
+    <div class="hero__text">
+      <h1>Registro de Plancha</h1>
+      <p>Agrega Principal y Suplente por fila y envía.</p>
+    
+    </div>
+  </div>
+</header>
+
+
+    <!-- CARD -->
+    <main class="card">
+      <form id="coopetrolForm">
+        <h2>Plancha</h2>
+        <p class="hint">Diligencia el número de cédula para Principal y Suplente. Puedes agregar más filas con el botón “+”.</p>
+
+        <div class="toolbar">
+          <button type="button" class="btn btn--ghost btn-small" id="addRowBtn">+ Agregar fila</button>
+          <span class="muted" id="rowCountLabel">Filas: 1</span>
+        </div>
+
+        <div style="overflow:auto;">
+          <table aria-label="Tabla de planchas">
+            <thead>
+              <tr>
+                <th style="width:60px;">#</th>
+                <th>Principal (cédula)</th>
+                <th>Suplente (cédula)</th>
+                <th class="td-actions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="rowsTbody">
+              <!-- filas dinámicas -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="controls">
+          <div>
+            <button type="button" class="btn btn--ghost" id="resetBtn">Limpiar</button>
+          </div>
+
+          <div class="controls__right">
+            <button type="submit" class="btn btn--primary" id="submitBtn">Enviar</button>
+          </div>
+        </div>
+
+        <div id="status" class="status muted" aria-live="polite"></div>
+      </form>
+    </main>
+  </div>
+
+<!-- Pop up de resultado -->
+<div id="resultModal" class="modal" aria-hidden="true">
+  <div class="modal__backdrop" data-close="1"></div>
+
+  <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+    <div class="modal__header">
+      <div class="modal__icon" id="resultIcon" aria-hidden="true">✓</div>
+      <div>
+        <h3 id="resultTitle" class="modal__title">Resultado</h3>
+        <p id="resultMessage" class="modal__message"></p>
+      </div>
+    </div>
+
+    <div class="modal__actions">
+      <button type="button" class="btn btn--primary" id="resultOkBtn">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Overlay de carga -->
+<div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+  <div class="loading-card" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <div class="loading-text">
+      <strong>Enviando información...</strong>
+      <div class="muted">Por favor espera un momento</div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Botón flotante: Planchas registradas -->
+  <button type="button" id="openPlanchasBtn" class="fab" aria-label="Abrir planchas registradas">
+    Planchas registradas
+  </button>
+
+  <!-- Modal: Planchas registradas -->
+  <div id="planchasModal" class="modal" aria-hidden="true">
+    <div class="modal__backdrop" data-close="1"></div>
+
+    <div class="modal__card modal__card--wide" role="dialog" aria-modal="true" aria-labelledby="planchasTitle">
+      <div class="modal__topbar">
+        <div>
+          <h3 id="planchasTitle" class="modal__title">Planchas registradas</h3>
+          <p id="planchasStatus" class="modal__message"></p>
+        </div>
+
+        <div class="modal__topbarActions">
+          <button type="button" class="btn btn--ghost btn-small" id="refreshPlanchasBtn">Actualizar</button>
+          <button type="button" class="btn btn--primary btn-small" id="closePlanchasBtn">Cerrar</button>
+        </div>
+      </div>
+
+      <div id="planchasContainer" class="planchas-container" aria-live="polite"></div>
+    </div>
+  </div>
+
+
+  <script src="./script-planchas.js"></script>
+</body>
+</html>
