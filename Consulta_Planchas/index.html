@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Planchas registradas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="hero">
+      <div class="hero__inner">
+        <div class="hero__brand">
+          <img class="hero__logo" src="../logo-coopetrol.png" alt="Coopetrol">
+        </div>
+
+        <div class="hero__text">
+          <h1>Planchas registradas</h1>
+          <p>Consulta de Principal/Suplente por plancha.</p>
+       
+        </div>
+      </div>
+    </header>
+
+    <main class="card">
+      <div class="toolbar" style="margin-top:0;">
+        <div>
+          <h2 style="margin-top:0;">Histórico</h2>
+          <p id="planchasStatus" class="hint" style="margin-top:-2px;">Cargando…</p>
+        </div>
+
+        <div class="controls__right">
+          <button type="button" class="btn btn--ghost btn-small" id="backBtn">Volver</button>
+          <button type="button" class="btn btn--primary btn-small" id="refreshBtn">Actualizar</button>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 1fr;">
+        <div class="field field--full">
+          <label for="filterInput">Filtrar</label>
+          <input id="filterInput" type="text" placeholder="Busca por plancha, cédula o nombre (principal/suplente)…" autocomplete="off" />
+          <div class="hint" style="margin-top:6px;">Sugerencia: escribe parte de la cédula o el nombre para filtrar.</div>
+        </div>
+      </div>
+
+      <div id="planchasContainer" class="planchas-container" aria-live="polite"></div>
+
+      <div id="emptyState" class="muted" style="display:none; margin-top: 10px; font-weight:700;">
+        No hay resultados con ese filtro.
+      </div>
+    </main>
+  </div>
+
+  <!-- Overlay de carga (reutiliza tu CSS) -->
+  <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+    <div class="loading-card" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <div class="loading-text">
+        <strong>Cargando información...</strong>
+        <div class="muted">Por favor espera un momento</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./planchas.js"></script>
+</body>
+</html>
