@@ -300,6 +300,9 @@ function resetFormSilently() {
   tbody.innerHTML = "";
   tbody.appendChild(makeRow(1));
   renumberRows();
+
+  const organoSelect = $("organoSelect");
+  if (organoSelect) organoSelect.value = "";
 }
 
 // ============================
@@ -429,6 +432,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const organo = $("organoSelect")?.value || "";
+    if (!organo) {
+      openResultModal("Debes seleccionar Consejo de Administración o Junta de Vigilancia.", true);
+      return;
+    }
+
     if (!endpoint || endpoint === "PON_AQUI_TU_ENDPOINT_REAL") {
       openResultModal("Falta configurar el endpoint real del Flow.", true);
       return;
@@ -440,6 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const rowsJson = collectRowsJson();
       const payload = {
         submittedAt: new Date().toISOString(),
+        organo,
         ...rowsJson
       };
 
