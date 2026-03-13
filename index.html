@@ -55,7 +55,7 @@
     .toolbar{
       display:flex;
       justify-content: space-between;
-      align-items:center;
+      align-items:flex-end;
       gap: 12px;
       margin: 10px 0 12px;
       flex-wrap: wrap;
@@ -91,12 +91,30 @@
         <h2>Plancha</h2>
         <p class="hint">Diligencia el número de cédula del aspirante Principal y Suplente de conformidad con el artículo 51. Normas de la Asamblea. numeral 4. "...Cada plancha incorporará por lo menos un renglón, no permitiéndose que el nombre de un delegado hábil esté inscrito en más de una plancha." del estatuto vigente Coopetrol.  
         
-          <br><br>Puedes agregar más renglones con el botón “+ Agregar renglón”. </br>
+          
         </p>
 
-        <div class="toolbar">
-          <button type="button" class="btn btn--ghost btn-small" id="addRowBtn">+ Agregar renglón</button>
-          <span class="muted" id="rowCountLabel">Renglón: 1</span>
+        <div class="toolbar toolbar--organo">
+          <div class="toolbar__left toolbar__left--organo">
+            <span class="toolbar__label">Seleccione el organismo</span>
+            <select id="organoSelect" name="organo" class="select-organo" required>
+              <option value="" selected disabled>Seleccione una opción</option>
+              <option value="Consejo">Consejo de Administración</option>
+              <option value="Junta">Junta de Vigilancia</option>
+            </select>
+          </div>
+
+<p class="hint">
+
+<br>
+Puedes agregar más renglones con el botón “+ Agregar renglón”.
+
+</p>
+
+          <div class="toolbar__right">
+            <button type="button" class="btn btn--ghost btn-small" id="addRowBtn">+ Agregar renglón</button>
+            <span class="muted" id="rowCountLabel">Renglón: 1</span>
+          </div>
         </div>
 
         <div style="overflow:auto;">
