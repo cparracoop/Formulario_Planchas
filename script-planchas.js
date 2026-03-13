@@ -291,7 +291,7 @@ function renumberRows() {
   });
 
   const label = $("rowCountLabel");
-  if (label) label.textContent = `Filas: ${rows.length}`;
+    if (label) label.textContent = `Renglón: ${rows.length}`;
 }
 
 // Limpia la tabla sin mostrar mensajes
