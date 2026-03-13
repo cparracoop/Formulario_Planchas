@@ -1,7 +1,6 @@
 :root{
   /* Colores base (planos, sin degradé, sin saturar) */
   --teal: #008a86;
-  --primary: var(--teal);
   --teal-soft: rgba(0,138,134,.08);
 
   --amber: #f59e0b;
@@ -511,8 +510,6 @@ textarea{ resize: vertical; min-height: 120px; }
   box-shadow: 0 20px 60px rgba(0,0,0,.18);
   padding: 18px 18px 16px;
   animation: modalIn .18s ease-out;
-  max-height: calc(100vh - 48px);
-  overflow: hidden;
 }
 
 
@@ -558,108 +555,108 @@ textarea{ resize: vertical; min-height: 120px; }
   margin-top: 14px;
 }
 
-/* =========================
-   Botón flotante (Planchas)
-========================= */
-.fab{
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 9000;
+
+/* Selector de órgano en toolbar */
+select,
+input[type="text"],
+input[type="date"],
+input[type="number"],
+textarea,
+input[type="file"]{
+  width:100%;
+  padding: 10px 12px;
   border: 1px solid var(--border);
-  background: var(--teal);
-  color: #fff;
-  border-radius: 999px;
-  padding: 12px 14px;
-  font-weight: 800;
-  box-shadow: 0 18px 50px rgba(2,6,23,.18);
-  cursor: pointer;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  background: #fff;
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
 
-.fab:hover{ filter: brightness(0.98); }
-.fab:active{ transform: translateY(1px); }
+select:focus,
+input:focus,
+textarea:focus{
+  border-color: rgba(0,138,134,.55);
+  box-shadow: 0 0 0 4px rgba(0,138,134,.10);
+}
 
-@media (max-width: 520px){
-  .fab{
-    right: 12px;
-    bottom: 12px;
-    padding: 10px 12px;
-    font-size: 13px;
+.toolbar__left,
+.toolbar__right{
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.field--compact{
+  gap:6px;
+}
+
+.field--compact label{
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:.01em;
+}
+
+.field--organo{
+  min-width: 280px;
+  max-width: 360px;
+}
+
+@media (max-width: 720px){
+  .toolbar__left,
+  .toolbar__right{
+    width:100%;
+  }
+
+  .field--organo{
+    min-width: 100%;
+    max-width: 100%;
   }
 }
 
-/* =========================
-   Modal: Planchas registradas
-========================= */
-.modal__card--wide{
-  width: min(980px, calc(100% - 40px));
-}
 
-.modal__topbar{
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-.modal__topbarActions{
-  display: flex;
-  gap: 10px;
+.toolbar--organo{
   align-items: center;
-  flex-wrap: wrap;
+  margin-top: 8px;
 }
 
-.planchas-container{
-  margin-top: 12px;
-  display: grid;
-  gap: 14px;
+.toolbar__left--organo{
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.plancha-card{
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: #fff;
-  padding: 14px;
-}
-
-.plancha-title{
-  margin: 0 0 10px;
-  font-size: 15px;
-  font-weight: 900;
-}
-
-.plancha-table{
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
-}
-
-.plancha-table thead th{
-  text-align: left;
-  font-size: 13px;
+.toolbar__label{
+  font-size: 14px;
+  font-weight: 700;
   color: var(--muted);
-  font-weight: 800;
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(0,138,134,.06);
+  white-space: nowrap;
 }
 
-.plancha-table tbody td{
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
+.select-organo{
+  min-width: 280px;
+  max-width: 360px;
 }
 
-.plancha-table tbody tr:last-child td{ border-bottom: none; }
+.select-organo:invalid{
+  color: var(--muted);
+}
 
-/* =========================
-   Scroll interno: Planchas (sin romper el centrado del modal)
-========================= */
-#planchasContainer{
-  max-height: calc(100vh - 220px); /* deja espacio para topbar + paddings */
-  overflow: auto;
-  padding-right: 6px; /* evita que el scroll tape contenido */
+@media (max-width: 720px){
+  .toolbar--organo{
+    align-items: flex-start;
+  }
+
+  .toolbar__left--organo{
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .select-organo{
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
