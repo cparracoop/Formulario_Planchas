@@ -60,10 +60,20 @@ function normalize(text) {
   return String(text || "").toLowerCase().trim();
 }
 
+function getOrganoLabel(value) {
+  const normalized = normalize(value);
+  if (normalized === "c") return "Consejo";
+  if (normalized === "j") return "Junta";
+  if (normalized.includes("consejo")) return "Consejo";
+  if (normalized.includes("junta")) return "Junta";
+  return value || "Sin organismo";
+}
+
 function planchaToSearchText(p) {
   const planchaId = p?.plancha || "";
+  const organo = getOrganoLabel(p?.organo || "");
   const registros = Array.isArray(p?.registros) ? p.registros : [];
-  const parts = [planchaId];
+  const parts = [planchaId, organo];
 
   registros.forEach((r) => {
     parts.push(
@@ -75,7 +85,19 @@ function planchaToSearchText(p) {
   return normalize(parts.filter(Boolean).join(" | "));
 }
 
-function renderPlanchas(data, filterText = "") {
+function matchesOrganoFilter(plancha, organoFilter) {
+  if (!organoFilter) return true;
+  return getOrganoLabel(plancha?.organo || "") === organoFilter;
+}
+
+function getCurrentFilters() {
+  return {
+    text: $("filterInput")?.value || "",
+    organo: $("organoFilter")?.value || ""
+  };
+}
+
+function renderPlanchas(data, filters = {}) {
   const container = $("planchasContainer");
   const emptyState = $("emptyState");
   if (!container) return;
@@ -88,26 +110,30 @@ function renderPlanchas(data, filterText = "") {
     return;
   }
 
-  // más recientes primero
   const ordered = [...planchas].reverse();
+  const q = normalize(filters.text);
+  const organoFilter = filters.organo || "";
 
-  const q = normalize(filterText);
-  const filtered = q
-    ? ordered.filter(p => planchaToSearchText(p).includes(q))
-    : ordered;
+  const filtered = ordered.filter((p) => {
+    const byOrgano = matchesOrganoFilter(p, organoFilter);
+    const byText = q ? planchaToSearchText(p).includes(q) : true;
+    return byOrgano && byText;
+  });
 
-  setStatus(`Total planchas: ${planchas.length} · Mostrando: ${filtered.length}`);
+  const labelFiltro = organoFilter ? ` · Organismo: ${organoFilter}` : "";
+  setStatus(`Total planchas: ${planchas.length} · Mostrando: ${filtered.length}${labelFiltro}`);
 
   if (filtered.length === 0) {
     container.innerHTML = "";
     if (emptyState) emptyState.style.display = "block";
     return;
-  } else {
-    if (emptyState) emptyState.style.display = "none";
   }
+  if (emptyState) emptyState.style.display = "none";
 
   container.innerHTML = filtered.map((p) => {
     const planchaId = escapeHtml(p?.plancha || "(sin id)");
+    const organo = escapeHtml(getOrganoLabel(p?.organo || ""));
+    const badgeClass = organo === "Junta" ? "plancha-badge badge-junta" : "plancha-badge badge-consejo";
     const registros = Array.isArray(p?.registros) ? p.registros : [];
 
     const rows = registros.map((r) => {
@@ -120,6 +146,7 @@ function renderPlanchas(data, filterText = "") {
       return `
         <tr>
           <td><strong class="muted">${orden}</strong></td>
+          <td>${organo}</td>
           <td>${pc}</td>
           <td>${pn}</td>
           <td>${sc}</td>
@@ -130,12 +157,16 @@ function renderPlanchas(data, filterText = "") {
 
     return `
       <section class="plancha-card">
-        <h4 class="plancha-title">Plancha: ${planchaId}</h4>
+        <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-bottom:10px;">
+          <h4 class="plancha-title" style="margin:0;">Plancha: ${planchaId}</h4>
+          <span class="${badgeClass}">${organo}</span>
+        </div>
         <div style="overflow:auto;">
           <table class="plancha-table" aria-label="Plancha ${planchaId}">
             <thead>
               <tr>
                 <th style="width:60px;">#</th>
+                <th style="width:140px;">Organismo</th>
                 <th>Principal (cédula)</th>
                 <th>Principal (nombre)</th>
                 <th>Suplente (cédula)</th>
@@ -143,7 +174,7 @@ function renderPlanchas(data, filterText = "") {
               </tr>
             </thead>
             <tbody>
-              ${rows || `<tr><td colspan="5" class="muted">Sin registros</td></tr>`}
+              ${rows || `<tr><td colspan="6" class="muted">Sin registros</td></tr>`}
             </tbody>
           </table>
         </div>
@@ -162,7 +193,7 @@ async function loadPlanchas() {
 
   try {
     lastData = await fetchPlanchasJson();
-    renderPlanchas(lastData, $("filterInput")?.value || "");
+    renderPlanchas(lastData, getCurrentFilters());
   } catch (err) {
     console.error(err);
     setStatus("");
@@ -186,7 +217,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("filterInput")?.addEventListener("input", () => {
     if (!lastData) return;
-    renderPlanchas(lastData, $("filterInput")?.value || "");
+    renderPlanchas(lastData, getCurrentFilters());
+  });
+
+  $("organoFilter")?.addEventListener("change", () => {
+    if (!lastData) return;
+    renderPlanchas(lastData, getCurrentFilters());
   });
 
   loadPlanchas();
