@@ -42,12 +42,13 @@
         </div>
       </div>
 
-      <div class="grid" style="grid-template-columns: 1fr 240px; gap: 14px; align-items: end;">
+      <div class="grid" style="grid-template-columns: 1fr;">
         <div class="field field--full">
           <label for="filterInput">Filtrar</label>
           <input id="filterInput" type="text" placeholder="Busca por plancha, cédula o nombre (principal/suplente)…" autocomplete="off" />
           <div class="hint" style="margin-top:6px;">Sugerencia: escribe parte de la cédula o el nombre para filtrar.</div>
         </div>
+      </div>
 
         <div class="field field--full">
           <label for="organoFilter">Organismo</label>
@@ -58,8 +59,8 @@
           </select>
           <div class="hint" style="margin-top:6px;">Filtra por tipo de plancha.</div>
         </div>
-      </div>
 
+      
       <div id="planchasContainer" class="planchas-container" aria-live="polite"></div>
 
       <div id="emptyState" class="muted" style="display:none; margin-top: 10px; font-weight:700;">
