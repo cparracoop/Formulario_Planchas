@@ -59,7 +59,7 @@ function openResultModal(message, isError = false) {
   const titleEl = $("resultTitle");
 
   if (msgEl) msgEl.textContent = message || "";
-  if (titleEl) titleEl.textContent = isError ? "Ocurrió un error" : "Registro exitoso";
+  if (titleEl) titleEl.textContent = isError ? "¡Ups! No fue posible completar la inscripción." : "Registro exitoso";
   if (iconEl) iconEl.textContent = isError ? "!" : "✓";
 
   modal.classList.add("is-open");
@@ -476,7 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (err) {
       console.error(err);
-      openResultModal("Ocurrió un error al enviar. Revisa consola (F12).", true);
+      openResultModal("Ocurrió un error al enviar.", true);
     } finally {
       setLoading(false);
     }
