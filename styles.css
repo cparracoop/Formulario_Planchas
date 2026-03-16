@@ -660,3 +660,81 @@ textarea:focus{
     max-width: 100%;
   }
 }
+
+/* =========================
+   Modal: Planchas registradas
+========================= */
+.modal__card--wide{
+  width: min(980px, calc(100% - 40px));
+}
+
+.modal__topbar{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.modal__topbarActions{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.planchas-container{
+  margin-top: 12px;
+  display: grid;
+  gap: 14px;
+}
+
+.plancha-card{
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  padding: 14px;
+}
+
+.plancha-title{
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.plancha-table{
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.plancha-table thead th{
+  text-align: left;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 800;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,138,134,.06);
+}
+
+.plancha-table tbody td{
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.plancha-table tbody tr:last-child td{ border-bottom: none; }
+
+/* =========================
+   Scroll interno: Planchas (sin romper el centrado del modal)
+========================= */
+#planchasContainer{
+  max-height: calc(100vh - 220px); /* deja espacio para topbar + paddings */
+  overflow: auto;
+  padding-right: 6px; /* evita que el scroll tape contenido */
+}
+
+
