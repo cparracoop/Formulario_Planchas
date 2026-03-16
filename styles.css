@@ -636,7 +636,7 @@ textarea:focus{
 
 .select-organo{
   min-width: 280px;
-  max-width: 360px;
+  max-width: 280px;
 }
 
 .select-organo:invalid{
